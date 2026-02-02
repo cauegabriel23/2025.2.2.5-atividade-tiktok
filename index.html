@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok UI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #fe2c55;
+            --bg: #ffffff;
+            --text-main: #161823;
+            --text-sec: #8a8b91;
+            --border: #e3e3e4;
+            --hover: #f1f1f2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .logo i { margin-right: 5px; }
+
+        .header-center {
+            display: flex;
+            gap: 20px;
+        }
+
+        .story-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #20d5ec;
+            background-color: #ddd;
+            background-size: cover;
+            cursor: pointer;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-upload {
+            padding: 6px 12px;
+            background: var(--hover);
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .user-avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .main-container {
+            display: flex;
+            margin-top: 60px;
+            max-width: 100%;
+        }
+
+        .sidebar {
+            width: 240px;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            padding: 20px 8px 20px 16px;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            border-right: 1px solid transparent; 
+        }
+
+        
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(22, 24, 35, 0.06); border-radius: 3px; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: var(--text-main);
+        }
+
+        .nav-item.active { color: var(--primary); }
+        .nav-item:hover { background-color: var(--hover); }
+        .nav-item i { width: 32px; font-size: 20px; }
+        .nav-item span { font-size: 16px; }
+
+        .separator { height: 1px; background: var(--border); margin: 10px 0; }
+        
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-sec);
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+        }
+        .sidebar-user img { width: 32px; height: 32px; border-radius: 50%; margin-right: 12px; }
+        .sidebar-user-info p { font-size: 14px; font-weight: 600; }
+        .sidebar-user-info span { font-size: 12px; color: var(--text-sec); }
+
+        
+        .content {
+            flex: 1;
+            margin-left: 240px; 
+            padding: 24px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .video-card {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            position: relative;
+        }
+
+        .video-wrapper {
+            width: 340px;
+            height: 600px;
+            background-color: #000;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            background-image: url('https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); /* Placeholder image */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.6));
+            color: white;
+        }
+
+        .author-name { font-weight: 700; margin-bottom: 5px; }
+        .video-desc { font-size: 14px; margin-bottom: 10px; }
+        .music-tag { display: flex; align-items: center; gap: 5px; font-size: 13px; }
+
+        .action-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: flex-end;
+            height: 600px;
+            padding-bottom: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            background-color: #f1f1f2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.2s;
+        }
+        
+        .icon-circle:hover { background-color: #e4e4e6; }
+        .action-text { font-size: 12px; font-weight: 600; color: var(--text-main); }
+        
+        .avatar-action { position: relative; }
+        .avatar-action img { width: 48px; height: 48px; border-radius: 50%; border: 1px solid white; }
+        .follow-plus {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .shortcut-modal {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 16px;
+            z-index: 2000;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
+        .modal-header h4 { font-size: 16px; margin-right: 10px; }
+        .close-modal { cursor: pointer; color: var(--text-sec); }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text-sec);
+        }
+
+        .shortcut-item:last-child { border-bottom: none; }
+
+        .key-box {
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-weight: 600;
+            color: var(--text-main);
+            min-width: 24px;
+            text-align: center;
+            background: #f8f8f8;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fab fa-tiktok"></i> TikTok
+        </div>
+        
+        <div class="header-center">
+            <div class="story-avatar" style="background-image: url('https://randomuser.me/api/portraits/men/32.jpg')"></div>
+            <div class="story-avatar" style="background-image: url('https://randomuser.me/api/portraits/women/44.jpg')"></div>
+            <div class="story-avatar" style="background-image: url('https://randomuser.me/api/portraits/women/65.jpg')"></div>
+        </div>
+
+        <div class="header-right">
+            <a href="#" class="btn-upload">+ Carregar</a>
+            <button class="btn-primary">Obter app</button>
+            <div class="user-avatar-sm" style="background: url('https://randomuser.me/api/portraits/men/85.jpg'); background-size: cover;"></div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="nav-item active">
+                <i class="fas fa-home"></i> <span>Para você</span>
+            </div>
+            <div class="nav-item">
+                <i class="far fa-compass"></i> <span>Explorar</span>
+            </div>
+            <div class="nav-item" style="color: var(--primary);">
+                <i class="fas fa-user-friends"></i> <span>Seguindo</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-users"></i> <span>Amigos</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-video"></i> <span>LIVE</span>
+            </div>
+            <div class="nav-item">
+                <i class="far fa-paper-plane"></i> <span>Mensagens</span> <span style="background:var(--primary); color:white; font-size:10px; padding:2px 6px; border-radius:10px; margin-left:auto;">9</span>
+            </div>
+            <div class="nav-item">
+                <i class="far fa-bell"></i> <span>Atividade</span> <span style="background:var(--primary); color:white; font-size:10px; padding:2px 6px; border-radius:10px; margin-left:auto;">2</span>
+            </div>
+            
+            <div class="separator"></div>
+
+            <h3 class="section-title">Contas que você segue</h3>
+            
+            <div class="sidebar-user">
+                <img src="https://randomuser.me/api/portraits/women/10.jpg" alt="User">
+                <div class="sidebar-user-info">
+                    <p>LUMAI STORE</p>
+                    <span>lumaistorebr</span>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="User">
+                <div class="sidebar-user-info">
+                    <p>Rita Lobo</p>
+                    <span>ritalobo</span>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
+                <div class="sidebar-user-info">
+                    <p>wslbrasil</p>
+                    <span>wslbrasil</span>
+                </div>
+            </div>
+            
+            <div class="nav-item" style="margin-top: 10px;">
+                <i class="fas fa-chevron-down" style="font-size: 14px; width: 20px;"></i> <span style="font-size: 14px;">Ver mais</span>
+            </div>
+
+        </aside>
+
+        <main class="content">
+            <div class="video-card">
+                
+                <div class="video-wrapper">
+                    <i class="fas fa-volume-mute" style="position: absolute; top: 20px; left: 20px; color: white; font-size: 20px;"></i>
+                    
+                    <div class="video-overlay">
+                        <div class="author-name">wslbrasil <i class="fas fa-check-circle" style="color: #20d5ec; font-size: 12px;"></i> · <span>1 sem. atrás</span></div>
+                        <div class="video-desc">O chefe convocou! Quero ver desobedecer... 😎 ...</div>
+                        <div class="music-tag"><i class="fas fa-music"></i> som original - wslbrasil</div>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <div class="action-btn avatar-action">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
+                        <div class="follow-plus"><i class="fas fa-plus"></i></div>
+                    </div>
+                    
+                    <button class="action-btn">
+                        <div class="icon-circle"><i class="fas fa-heart" style="color: var(--text-main);"></i></div>
+                        <span class="action-text">90</span>
+                    </button>
+
+                    <button class="action-btn">
+                        <div class="icon-circle"><i class="fas fa-comment-dots"></i></div>
+                        <span class="action-text">3</span>
+                    </button>
+
+                    <button class="action-btn">
+                        <div class="icon-circle"><i class="fas fa-bookmark"></i></div>
+                        <span class="action-text">2</span>
+                    </button>
+
+                    <button class="action-btn">
+                        <div class="icon-circle"><i class="fas fa-share"></i></div>
+                        <span class="action-text">1</span>
+                    </button>
+                    
+                    <div class="action-btn" style="margin-top: auto;">
+                        <div class="icon-circle" style="background: black; width: 32px; height: 32px;">
+                            <img src="https://randomuser.me/api/portraits/men/22.jpg" style="width: 20px; height: 20px; border-radius: 50%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="shortcut-modal">
+        <div class="modal-header">
+            <h4>Apresentação dos atalhos de teclado!</h4>
+            <i class="fas fa-times close-modal"></i>
+        </div>
+        
+        <div class="shortcut-item">
+            <span>Ir para o vídeo anterior</span>
+            <div class="key-box"><i class="fas fa-arrow-up"></i></div>
+        </div>
+        <div class="shortcut-item">
+            <span>Ir para o próximo vídeo</span>
+            <div class="key-box"><i class="fas fa-arrow-down"></i></div>
+        </div>
+        <div class="shortcut-item">
+            <span>Curtir vídeo</span>
+            <div class="key-box">L</div>
+        </div>
+        <div class="shortcut-item">
+            <span>Silenciar/restaurar áudio do vídeo</span>
+            <div class="key-box">M</div>
+        </div>
+    </div>
+
+</body>
+</html>
